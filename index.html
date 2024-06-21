@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Signup Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        input[type="text"], input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .user-list {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px 0;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+        .user {
+            flex: 0 0 auto;
+            text-align: center;
+            margin-right: 10px;
+        }
+        .user img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+        }
+        .name {
+            cursor: pointer;
+            color: blue;
+            margin: 5px 0;
+        }
+        .name:hover {
+            text-decoration: underline;
+        }
+        .links {
+            margin-top: 20px;
+            display: none;
+        }
+        .link {
+            color: red;
+            cursor: pointer;
+            text-decoration: underline;
+            display: block;
+            margin: 5px 0;
+        }
+        .post-link-form {
+            display: none;
+            margin-top: 20px;
+        }
+        .posted-links {
+            margin-top: 20px;
+        }
+        .posted-link {
+            display: block;
+            margin: 5px 0;
+        }
+        .posted-link span {
+            display: block;
+            font-size: 0.9em;
+            color: gray;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login and Signup Page</h1>
+    <div class="user-list" id="userList"></div>
+
+    <div id="loginSection">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="loginUsername">Username:</label>
+            <input type="text" id="loginUsername" name="loginUsername" required>
+            <label for="loginPassword">Password:</label>
+            <input type="password" id="loginPassword" name="loginPassword" required>
+            <input type="submit" value="Login">
+        </form>
+        <p>Don't have an account? <a href="#" id="showSignup">Sign Up</a></p>
+    </div>
+    <div id="signupSection" style="display: none;">
+        <h2>Sign Up</h2>
+        <form id="signupForm">
+            <label for="signupUsername">Username:</label>
+            <input type="text" id="signupUsername" name="signupUsername" required>
+            <label for="signupPassword">Password:</label>
+            <input type="password" id="signupPassword" name="signupPassword" required>
+            <input type="submit" value="Sign Up">
+        </form>
+        <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+    </div>
+    <div id="userDetails" style="display: none;">
+        <div class="links">
+            <span class="link" id="dictionaryLink">Dictionary Lookup</span>
+            <span class="link" id="quoteLink">Random Quote</span>
+            <span class="link" id="rhymeLink">Rhymes</span>
+        </div>
+        <div class="post-link-form">
+            <h3>Post a Link</h3>
+            <form id="postLinkForm">
+                <label for="newLink">Enter the link:</label>
+                <input type="text" id="newLink" name="newLink" required>
+                <input type="submit" value="Post">
+            </form>
+        </div>
+        <div class="posted-links">
+            <h3>Posted Links</h3>
+            <div id="postedLinksContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginSection = document.getElementById('loginSection');
+            const signupSection = document.getElementById('signupSection');
+            const userDetails = document.getElementById('userDetails');
+            const showSignupLink = document.getElementById('showSignup');
+            const showLoginLink = document.getElementById('showLogin');
+            const postLinkForm = document.getElementById('postLinkForm');
+            const postedLinksContainer = document.getElementById('postedLinksContainer');
+            const userList = document.getElementById('userList');
+
+            // Show signup section and hide login section
+            showSignupLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                loginSection.style.display = 'none';
+                signupSection.style.display = 'block';
+                userDetails.style.display = 'none'; // Hide user details on signup click
+            });
+
+            // Show login section and hide signup section
+            showLoginLink.addEventListener('click', (event) => {
+                event.preventDefault();
+                signupSection.style.display = 'none';
+                loginSection.style.display = 'block';
+                userDetails.style.display = 'none'; // Hide user details on login click
+            });
+
+            // Handle signup form submission
+            const signupForm = document.getElementById('signupForm');
+            signupForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const username = document.getElementById('signupUsername').value;
+                const password = document.getElementById('signupPassword').value;
+
+                // Simulate storing user data (replace with actual signup logic)
+                localStorage.setItem('username', username);
+                localStorage.setItem('password', password);
+
+                // Display login section after signup
+                signupSection.style.display = 'none';
+                loginSection.style.display = 'block';
+                userDetails.style.display = 'none'; // Hide user details on successful signup
+            });
+
+            // Handle login form submission
+            const loginForm = document.getElementById('loginForm');
+            loginForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const username = document.getElementById('loginUsername').value;
+                const password = document.getElementById('loginPassword').value;
+
+                // Retrieve stored user data
+                const storedUsername = localStorage.getItem('username');
+                const storedPassword = localStorage.getItem('password');
+
+                // Simulate authentication (replace with actual login logic)
+                if (username === storedUsername && password === storedPassword) {
+                    // Show user details and links
+                    userDetails.style.display = 'block';
+                    showLinksForUser(username); // Function to show links based on logged-in user
+                    addUserToTop(username); // Add the logged-in user to the top list
+                    loginSection.style.display = 'none'; // Hide login section after successful login
+                    signupSection.style.display = 'none'; // Also hide signup section if logged in
+                    document.querySelector('.post-link-form').style.display = 'block'; // Show post link form
+                    loadPostedLinks(); // Load all previously posted links
+                } else {
+                    alert('Invalid username or password');
+                }
+            });
+
+            // Function to show links based on logged-in user
+            function showLinksForUser(username) {
+                const links = document.querySelector('.links'); // Corrected to query the links div
+
+                links.style.display = 'block'; // Show the links section
+                
+                // Set the text content for each link dynamically
+                document.getElementById('dictionaryLink').textContent = 'https://hassan-rhyme-api.onrender.com/dictionary?word=' + username;
+                document.getElementById('quoteLink').textContent = 'https://hassan-rhyme-api.onrender.com/quote';
+                document.getElementById('rhymeLink').textContent = 'https://hassan-rhyme-api.onrender.com/rhyme?word=' + username;
+            }
+
+            // Function to add a user to the top list
+            function addUserToTop(username) {
+                const userElement = document.createElement('div');
+                userElement.className = 'user';
+                userElement.innerHTML = `
+                    <img src="https://via.placeholder.com/50" alt="${username}">
+                    <div class="name">${username}</div>
+                `;
+                userList.appendChild(userElement);
+            }
+
+            // Handle post link form submission
+            postLinkForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const newLink = document.getElementById('newLink').value;
+                const username = localStorage.getItem('username'); // Get the current logged-in user
+
+                // Create a new link element
+                const linkElement = document.createElement('div');
+                linkElement.className = 'posted-link';
+                linkElement.innerHTML = `
+                    <a href="${newLink}" target="_blank">${newLink}</a>
+                    <span>Posted by ${username}</span>
+                `;
+
+                // Add the new link to the posted links container
+                postedLinksContainer.appendChild(linkElement);
+
+                // Save the new link to localStorage with the username
+                savePostedLink({ link: newLink, username });
+
+                // Clear the input field
+                document.getElementById('newLink').value = '';
+            });
+
+            // Function to save a posted link to localStorage
+            function savePostedLink(linkObj) {
+                const storedLinks = JSON.parse(localStorage.getItem('postedLinks')) || [];
+                storedLinks.push(linkObj);
+                localStorage.setItem('postedLinks', JSON.stringify(storedLinks));
+            }
+
+            // Function to load all posted links from localStorage
+            function loadPostedLinks() {
+                const storedLinks = JSON.parse(localStorage.getItem('postedLinks')) || [];
+                storedLinks.forEach(linkObj => {
+                    const linkElement = document.createElement('div');
+                    linkElement.className = 'posted-link';
+                    linkElement.innerHTML = `
+                        <a href="${linkObj.link}" target="_blank">${linkObj.link}</a>
+                        <span>Posted by ${linkObj.username}</span>
+                    `;
+                    postedLinksContainer.appendChild(linkElement);
+                });
+            }
+
+            // Load posted links when the page loads
+            loadPostedLinks();
+        });
+    </script>
+</body>
+</html>
